@@ -21,15 +21,20 @@ export default function CertificatePage() {
     const [isDownloading, setIsDownloading] = useState(false);
     const [showCertificate, setShowCertificate] = useState(false);
     const [emailInput, setEmailInput] = useState("");
+    const [emailError, setEmailError] = useState("");
 
-    useEffect(() => {
-        if (!userName) {
-            router.push('/');
-        }
-    }, [userName, router]);
+    const validateEmail = (email: string) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
 
     const captureAndSubmit = async () => {
         if (!webcamRef.current) return;
+
+        if (!validateEmail(emailInput)) {
+            setEmailError("Please enter a valid email address");
+            return;
+        }
 
         setIsSubmitting(true);
         const imageSrc = webcamRef.current.getScreenshot();
@@ -251,14 +256,20 @@ export default function CertificatePage() {
                             type="email"
                             placeholder="you@example.com"
                             value={emailInput}
-                            onChange={(e) => setEmailInput(e.target.value)}
-                            className="w-full bg-sunbird-beige border-2 border-sunbird-brown/20 rounded-xl p-4 text-sunbird-brown placeholder-gray-400 focus:outline-none focus:border-sunbird-orange transition-colors"
+                            onChange={(e) => {
+                                setEmailInput(e.target.value);
+                                if (emailError) setEmailError("");
+                            }}
+                            className={`w-full bg-sunbird-beige border-2 rounded-xl p-4 text-sunbird-brown placeholder-gray-400 focus:outline-none transition-colors ${emailError ? 'border-red-500 focus:border-red-500' : 'border-sunbird-brown/20 focus:border-sunbird-orange'}`}
                         />
+                        {emailError && (
+                            <p className="text-red-500 text-xs mt-2 font-medium">{emailError}</p>
+                        )}
                     </div>
 
                     <button
                         onClick={captureAndSubmit}
-                        disabled={!emailInput || isSubmitting}
+                        disabled={!emailInput || !!emailError || isSubmitting}
                         className="w-full bg-sunbird-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5 transform"
                     >
                         {isSubmitting ? (

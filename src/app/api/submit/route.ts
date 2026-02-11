@@ -1,7 +1,20 @@
-
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
+
+export async function GET() {
+    try {
+        const { data, error } = await supabase
+            .from('sunbird_discovery_game_users')
+            .select('*')
+            .order('id', { ascending: false });
+
+        if (error) throw error;
+        return NextResponse.json(data || []);
+    } catch (error) {
+        console.error('Supabase GET Error:', error);
+        return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
+    }
+}
 
 export async function POST(request: Request) {
     try {
@@ -9,47 +22,29 @@ export async function POST(request: Request) {
         const { name, email, score, photo, date } = body;
 
         // Basic Validation
-        if (!name || !email) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!name || !email || !emailRegex.test(email)) {
+            return NextResponse.json({ error: 'Invalid or missing fields' }, { status: 400 });
         }
 
-        const dataDir = path.join(process.cwd(), 'data');
-        const filePath = path.join(dataDir, 'users.json');
+        const { data, error } = await supabase
+            .from('sunbird_discovery_game_users')
+            .insert([
+                {
+                    name,
+                    email,
+                    score,
+                    date,
+                    photo_stored: !!photo
+                }
+            ]);
 
-        // Ensure data directory exists
-        if (!fs.existsSync(dataDir)) {
-            fs.mkdirSync(dataDir, { recursive: true });
-        }
+        if (error) throw error;
 
-        let users = [];
-        if (fs.existsSync(filePath)) {
-            const fileContent = fs.readFileSync(filePath, 'utf-8');
-            try {
-                users = JSON.parse(fileContent);
-            } catch (e) {
-                console.error('Error parsing users.json:', e);
-                users = [];
-            }
-        }
+        return NextResponse.json({ success: true, message: 'Data saved to Supabase' });
 
-        const newUser = {
-            id: Date.now().toString(),
-            name,
-            email,
-            score,
-            date,
-            // Not storing photo to avoid huge file sizes
-            photoStored: !!photo
-        };
-
-        users.push(newUser);
-
-        fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
-
-        return NextResponse.json({ success: true, message: 'Data saved locally' });
-
-    } catch (error) {
-        console.error('API Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Supabase POST Error:', error);
+        return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
     }
 }
