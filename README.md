@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+# Sunbird Gamified Learning App
+
+A mobile-friendly, gamified web application to learn about Sunbird's building blocks, now featuring the official **Sunbird Design Theme**.
+
+## Features
+
+- **Sunbird Branding**: Uses the official color palette (Beige, Brown, Orange) and Montserrat font.
+- **Interactive Learning**: Drag-and-drop game to match Sunbird building blocks with their descriptions.
+- **Gamification**: Progress bars, confetti celebrations, and score tracking.
+- **Certification**: Automated certificate generation with user selfie, name, and official Sunbird/EkStep logos.
+- **Local Data Storage**: Player data (Name, Email, Score) is saved locally to `data/users.json`.
 
 ## Getting Started
 
-First, run the development server:
+1.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2.  **Run Development Server**:
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/app/page.tsx`: Landing page with Sunbird stats and theming.
+- `src/app/game/page.tsx`: The main game logic with updated design.
+- `src/app/certificate/page.tsx`: Webcam capture and Certificate generation (now uses local logos).
+- `src/app/api/submit/route.ts`: API to save player data to `data/users.json`.
+- `public/assets/`: Contains `sunbird-logo.png` and `ekstep-logo.png`.
+- `src/app/globals.css`: Contains Sunbird CSS variables.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Data Storage
 
-## Learn More
+User data is stored in a local JSON file at:
+`sunbird-game/data/users.json`
 
-To learn more about Next.js, take a look at the following resources:
+This file is automatically created when the first user completes the game.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 14+** (App Router)
+- **TailwindCSS** (Styling with Sunbird Theme)
+- **Framer Motion** (Animations)
+- **@dnd-kit** (Drag and Drop)
+- **Canvas Confetti** (Visual Feedback)
+- **html2canvas & jsPDF** (Certificate Generation)
