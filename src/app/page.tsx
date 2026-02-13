@@ -102,9 +102,9 @@ export default function Home() {
 
             {/* Stats section with increased mobile gap (mt-12) and animated counters */}
             <div className="mt-12 md:mt-16 grid grid-cols-3 gap-8 border-t border-sunbird-brown/10 pt-8">
-              <StatCard label="Learners" value={300} suffix="M+" />
-              <StatCard label="Orgs" value={6000} suffix="+" />
-              <StatCard label="Blocks" value={20} suffix="+" />
+              <StatCard label="Learners" value={20} suffix="M+" />
+              <StatCard label="Learning Assets" value={350} suffix="K+" />
+              <StatCard label="Credentials Issued" value={130} suffix="M+" />
             </div>
           </motion.div>
         </div>
