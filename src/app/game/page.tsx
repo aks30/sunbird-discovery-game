@@ -99,8 +99,8 @@ export default function GamePage() {
     const [options, setOptions] = useState<BuildingBlock[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
 
-    // Load questions
-    const [shuffledBlocks] = useState(() => shuffle(buildingBlocks));
+    // Load questions - randomly select 4 blocks
+    const [shuffledBlocks] = useState(() => shuffle(buildingBlocks).slice(0, 4));
 
     useEffect(() => {
         if (!userName) {
